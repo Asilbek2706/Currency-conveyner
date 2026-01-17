@@ -25,6 +25,35 @@ class Currency {
     }
 }
 
+class CurrencyConverter {
+    #currencies;
+
+    constructor(currencies) {
+        this.#currencies = currencies;
+        this.#populateSelect('from-currency');
+        this.#populateSelect('to-currency');
+        document.getElementById("convert").addEventListener('click', this.#convert);
+    }
+
+    #populateSelect(selectId) {
+        const selectElement = document.getElementById(selectId);
+        this.#currencies.forEach(currency => {
+            const option = document.createElement("option");
+            option.value = currency.rate;
+            option.label = currency.code;
+            selectElement.appendChild(option);
+        })
+    }
+
+    #convert() {
+        const fromCurrency = document.getElementById("from-currency").value;
+        const amount = parseFloat(document.getElementById("amount").value);
+        const toCurrency = document.getElementById("to-currency").value;
+        const result = amount * toCurrency / fromCurrency;
+        document.getElementById("result").textContent = `Result: ${result}`;
+    }
+}
+
 class App {
     #list;
     #currencies;
@@ -37,7 +66,8 @@ class App {
         const response = await fetch('https://api.frankfurter.dev/v1/latest?base=USD')
         const result = await response.json();
         this.#transformResult(result);
-        this.#renderCurrencies()
+        this.#renderCurrencies();
+        this.#renderConverter();
     }
 
     #transformResult(result) {
@@ -49,6 +79,10 @@ class App {
 
     #renderCurrencies() {
         this.#currencies.forEach( currency  => currency.display(this.#list));
+    }
+
+    #renderConverter() {
+        new CurrencyConverter(this.#currencies);
     }
 }
 
