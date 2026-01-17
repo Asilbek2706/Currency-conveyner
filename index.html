@@ -4,11 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Currency Conveyner</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Currency Converter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 </head>
 <body>
+<div class="container px-4">
+    <h1>Valyutalar kursi</h1>
+    <table class="table table-striped">
+        <thead>
+            <th>
+                Valyuta
+            </th>
+            <th>
+                Miqdori
+            </th>
+        </thead>
+        <tbody id="table-body">
+            <tr>
+                <td>USD</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>EUR</td>
+                <td>0.91</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Valyuta hisoblash</h2>
+    <div class="row p-3" id="converter">
+        <div class="col-6 col-sm-3">
+            <label for="from-currency" class="form-label">Base currency</label>
+            <select class="form-select" id="from-currency"></select>
+        </div>
+        <div class="col-6 col-sm-3">
+            <label for="to-currency" class="form-label">Desired currency</label>
+            <select class="form-select" id="to-currency"></select>
+        </div>
+        <div class="col-6 col-sm-3">
+            <label for="amount" class="form-label">Amount</label>
+            <input class="form-control" id="amount" type="number">
+        </div>
+        <div class="col-6 col-sm-3 d-flex align-items-end">
+            <button id="convert" class="btn btn-success">Convert</button>
+            <h4 id="result" class="ms-2">Result: </h4>
+        </div>
+    </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 <script src="script.js"></script>
 </body>
 </html>
