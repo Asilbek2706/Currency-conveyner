@@ -1,0 +1,73 @@
+body {
+  background-color: #f8f9fa;
+  color: #2b2d42;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+.main-card {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  height: 100%;
+}
+.main-card .card-title {
+  font-weight: 700;
+  color: #2b2d42;
+  font-size: 1.25rem;
+}
+
+.table {
+  margin-bottom: 0;
+}
+.table thead th {
+  background-color: #f1f4ff;
+  border: none;
+  color: #4361ee;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  padding: 12px;
+}
+.table tbody tr {
+  transition: all 0.2s ease;
+}
+.table tbody tr:hover {
+  background-color: rgba(67, 97, 238, 0.03);
+}
+.table tbody tr td {
+  padding: 12px;
+  border-bottom: 1px solid #edf2f4;
+  font-weight: 500;
+}
+
+.form-select, .form-control {
+  border: 2px solid #edf2f4;
+  border-radius: 10px;
+  padding: 10px 15px;
+}
+.form-select:focus, .form-control:focus {
+  border-color: #4361ee;
+  box-shadow: none;
+}
+
+.btn-primary {
+  background-color: #4361ee;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 12px;
+  transition: transform 0.2s;
+}
+.btn-primary:hover {
+  background-color: rgb(43.6146341463, 77.3463414634, 235.8853658537);
+  transform: translateY(-2px);
+}
+
+#result-container {
+  background: #f1f4ff;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px dashed #4361ee;
+}
+
+/*# sourceMappingURL=style.css.map */

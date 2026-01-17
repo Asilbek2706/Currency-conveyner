@@ -7,19 +7,14 @@ class Currency {
         this.#rate = rate;
     }
 
-    get code() {
-        return this.#code;
-    }
-
-    get rate() {
-        return this.#rate;
-    }
+    get code() { return this.#code; }
+    get rate() { return this.#rate; }
 
     display(container) {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-            <td>${this.code}</td>
-            <td>${this.rate}</td>
+            <td><span class="badge bg-light text-dark border p-2">${this.#code}</span></td>
+            <td class="text-end fw-bold">${this.#rate.toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
         `;
         container.appendChild(tr);
     }
@@ -27,61 +22,69 @@ class Currency {
 
 class CurrencyConverter {
     #currencies;
+    #fromSelect = document.getElementById('from-currency');
+    #toSelect = document.getElementById('to-currency');
+    #amountInput = document.getElementById('amount');
+    #resultText = document.getElementById('result');
+    #resultBox = document.getElementById('result-container');
 
     constructor(currencies) {
         this.#currencies = currencies;
-        this.#populateSelect('from-currency');
-        this.#populateSelect('to-currency');
-        document.getElementById("convert").addEventListener('click', this.#convert);
+        this.#setup();
     }
 
-    #populateSelect(selectId) {
-        const selectElement = document.getElementById(selectId);
-        this.#currencies.forEach(currency => {
-            const option = document.createElement("option");
-            option.value = currency.rate;
-            option.label = currency.code;
-            selectElement.appendChild(option);
-        })
+    #setup() {
+        this.#currencies.forEach(curr => {
+            this.#fromSelect.add(new Option(curr.code, curr.rate));
+            this.#toSelect.add(new Option(curr.code, curr.rate));
+        });
+
+        document.getElementById("convert").onclick = () => this.#calculate();
     }
 
-    #convert() {
-        const fromCurrency = document.getElementById("from-currency").value;
-        const amount = parseFloat(document.getElementById("amount").value);
-        const toCurrency = document.getElementById("to-currency").value;
-        const result = amount * toCurrency / fromCurrency;
-        document.getElementById("result").textContent = `Result: ${result}`;
+    #calculate() {
+        const amount = parseFloat(this.#amountInput.value);
+        if (!amount || amount <= 0) return;
+
+        const fromRate = this.#fromSelect.value;
+        const toRate = this.#toSelect.value;
+        const result = (amount / fromRate) * toRate;
+
+        this.#resultText.textContent = result.toLocaleString(undefined, {
+            maximumFractionDigits: 2
+        }) + " " + this.#toSelect.options[this.#toSelect.selectedIndex].text;
+
+        this.#resultBox.classList.remove('d-none');
     }
 }
 
 class App {
-    #list;
-    #currencies;
+    #list = document.getElementById('table-body');
+    #currencies = [];
+
     constructor() {
-        this.#init();
+        this.init();
     }
 
-    async #init() {
-        this.#list = document.getElementById('table-body');
-        const response = await fetch('https://api.frankfurter.dev/v1/latest?base=USD')
-        const result = await response.json();
-        this.#transformResult(result);
-        this.#renderCurrencies();
-        this.#renderConverter();
+    async init() {
+        try {
+            const res = await fetch('https://api.frankfurter.dev/v1/latest?base=USD');
+            const data = await res.json();
+
+            this.#currencies = [
+                new Currency(data.base, data.amount),
+                ...Object.entries(data.rates).map(([c, r]) => new Currency(c, r))
+            ];
+
+            this.#render();
+        } catch (e) {
+            console.error("API Error:", e);
+        }
     }
 
-    #transformResult(result) {
-        const { base, amount, rates } = result;
-        const baseCurrency = new Currency(base, amount);
-        const otherCurrencies = Object.entries(rates).map(([code, rate]) => new Currency(code, rate))
-        this.#currencies = [baseCurrency, ...otherCurrencies];
-    }
-
-    #renderCurrencies() {
-        this.#currencies.forEach( currency  => currency.display(this.#list));
-    }
-
-    #renderConverter() {
+    #render() {
+        this.#list.innerHTML = "";
+        this.#currencies.forEach(c => c.display(this.#list));
         new CurrencyConverter(this.#currencies);
     }
 }
